@@ -118,7 +118,7 @@ Production deployments must not expose:
 
 ## Whitepaper
 
-Whitepaper repository pending publication.
+- [`SATS-402 Technical Whitepaper`](docs/SATS-402_Technical_Whitepaper.pdf)
 
 ## License
 
