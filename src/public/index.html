@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SATS-402 Mutinynet Demo</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="eyebrow">SATS-402 v0.4 · Mutinynet</div>
+    <h1>CLTV-safe, preimage-locked atomic delivery over real LND nodes</h1>
+    <p class="lede">A Christopher Calicott / TVP-targeted demo: the simulator remains as a deterministic fault-injection harness, but the primary wedge is now a Mutinynet live path that uses real LND REST calls, real hold invoices, real SendPaymentV2 settlement, and a real Lightning preimage as the response unlock key.</p>
+    <div class="hero-actions">
+      <button id="runDefault">Run controlled fault demo</button>
+      <button id="runDoctor">Check Mutinynet LND nodes</button>
+      <button id="runMutinynet">Run live Mutinynet bridge</button>
+      <a href="/.well-known/sats402.json" target="_blank">Capability JSON</a>
+      <a href="/health" target="_blank">Health</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel live-panel">
+      <h2>Live Mutinynet path</h2>
+      <p>This path is not a memory-only simulation. It expects three reachable LND REST endpoints: Agent, Gateway, and Merchant. The Gateway creates an incoming hold invoice; the Agent pays it; the Gateway pays the Merchant invoice; the observed preimage settles the Agent-side hold invoice; the Agent decrypts the response locally.</p>
+      <div class="live-grid">
+        <div><strong>Backend</strong><span id="backendStatus">unknown</span></div>
+        <div><strong>Network</strong><span>Mutinynet custom signet</span></div>
+        <div><strong>Invariant</strong><span>E_in ≥ E_out + Δsafe</span></div>
+        <div><strong>Core claim</strong><span>No credit, no custody</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Controlled fault scenarios</h2>
+      <p>These buttons execute deterministic fault-injection flows: request envelope → encrypted 402 response → same-hash HTLC bridge → CLTV controller → preimage capture → local response decryption → signed receipt. Use them to answer VC objections before the live node path.</p>
+      <div id="scenarioButtons" class="scenario-grid"></div>
+    </section>
+
+    <section class="grid-two">
+      <div class="panel">
+        <h2>Architecture invariant</h2>
+        <div class="diagram">
+          <div class="node">Agent SDK<br><span>SATS402-REQUEST</span></div>
+          <div class="arrow">→</div>
+          <div class="node">Merchant SDK<br><span>encrypted 402</span></div>
+          <div class="arrow">→</div>
+          <div class="node">Gateway LND<br><span>hold invoice bridge</span></div>
+          <div class="arrow">→</div>
+          <div class="node">Mutinynet LN<br><span>preimage S</span></div>
+        </div>
+        <pre class="invariant">E_agent_to_gateway ≥ E_gateway_to_merchant_first_hop + Δbridge_safety</pre>
+      </div>
+      <div class="panel">
+        <h2>Current result</h2>
+        <div id="resultSummary" class="summary muted">Run a scenario.</div>
+        <div id="metrics" class="metric-grid"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Execution timeline</h2>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section class="grid-two">
+      <div class="panel">
+        <h2>Signed receipt</h2>
+        <pre id="receipt" class="json-block">{}</pre>
+      </div>
+      <div class="panel">
+        <h2>Decrypted payload</h2>
+        <pre id="payload" class="json-block">{}</pre>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Investor takeaway</h2>
+      <blockquote id="takeaway">SATS-402 is not merely a Bitcoin payment adapter for x402. It is a CLTV-safe, preimage-locked atomic delivery layer for AI-agent commerce over Lightning.</blockquote>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

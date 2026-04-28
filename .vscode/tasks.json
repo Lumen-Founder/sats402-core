@@ -1,0 +1,12 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "npm: dev", "type": "npm", "script": "dev", "problemMatcher": [] },
+    { "label": "npm: test", "type": "npm", "script": "test", "problemMatcher": [] },
+    { "label": "mutinynet: env template", "type": "npm", "script": "mutinynet:env", "problemMatcher": [] },
+    { "label": "mutinynet: doctor", "type": "npm", "script": "mutinynet:doctor", "problemMatcher": [] },
+    { "label": "mutinynet: live", "type": "npm", "script": "mutinynet:live", "problemMatcher": [] },
+    { "label": "docker compose up", "type": "shell", "command": "docker compose up --build", "problemMatcher": [] },
+    { "label": "docker compose mutinynet app", "type": "shell", "command": "docker compose -f docker-compose.mutinynet.yml up --build", "problemMatcher": [] }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "sats402-apify",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Unofficial SATS-402 wrapper proof for Apify Actor result delivery over Lightning.",
+  "scripts": {
+    "demo": "node src/demo.js",
+    "demo:fixture": "node src/demo.js --fixture",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Maven (SATS-402)",
+  "license": "MIT"
+}

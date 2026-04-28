@@ -1,0 +1,14 @@
+services:
+  sats402-mutinynet-demo:
+    build: .
+    container_name: sats402-mutinynet-live-demo
+    ports:
+      - "4020:4020"
+    env_file:
+      - .env.mutinynet
+    volumes:
+      - ./secrets:/app/secrets:ro
+    environment:
+      PORT: "4020"
+      SATS402_DEMO_MODE: "mutinynet"
+      SATS402_LIGHTNING_BACKEND: "mutinynet"

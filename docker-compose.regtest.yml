@@ -1,0 +1,80 @@
+# SATS-402 deterministic local regtest stack.
+# Uses real bitcoind regtest plus three real LND nodes: Agent, Gateway, Merchant.
+name: sats402-regtest
+
+services:
+  bitcoind:
+    image: coinswap/bitcoin-mutinynet:latest
+    container_name: sats402-bitcoind-regtest
+    user: "0:0"
+    restart: unless-stopped
+    command: ["bitcoind", "-datadir=/home/bitcoin/.bitcoin", "-conf=/home/bitcoin/.bitcoin/bitcoin.conf", "-printtoconsole"]
+    volumes:
+      - bitcoin-regtest-data:/home/bitcoin/.bitcoin
+      - ./deploy/regtest/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro
+    ports:
+      - "18443:18443"
+      - "18444:18444"
+    networks:
+      - sats402-regtest
+
+  lnd-agent:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-agent-regtest
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-agent-regtest-data:/root/.lnd
+      - ./deploy/regtest/lnd-agent.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "19731:9735"
+      - "11001:10009"
+      - "8181:8080"
+    networks:
+      - sats402-regtest
+
+  lnd-gateway:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-gateway-regtest
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-gateway-regtest-data:/root/.lnd
+      - ./deploy/regtest/lnd-gateway.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "19732:9735"
+      - "11002:10009"
+      - "8182:8080"
+    networks:
+      - sats402-regtest
+
+  lnd-merchant:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-merchant-regtest
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-merchant-regtest-data:/root/.lnd
+      - ./deploy/regtest/lnd-merchant.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "19733:9735"
+      - "11003:10009"
+      - "8183:8080"
+    networks:
+      - sats402-regtest
+
+networks:
+  sats402-regtest:
+    name: sats402-regtest
+
+volumes:
+  bitcoin-regtest-data:
+  lnd-agent-regtest-data:
+  lnd-gateway-regtest-data:
+  lnd-merchant-regtest-data:

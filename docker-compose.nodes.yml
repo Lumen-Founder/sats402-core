@@ -1,0 +1,81 @@
+# SATS-402 Mutinynet node stack.
+# Generates three real local LND nodes on Mutinynet: Agent, Gateway, Merchant.
+# Secrets are generated locally; never download macaroons from the internet.
+services:
+  bitcoind:
+    image: coinswap/bitcoin-mutinynet:latest
+    container_name: sats402-bitcoind-mutinynet
+    user: "0:0"
+    restart: unless-stopped
+    command: ["bitcoind", "-datadir=/home/bitcoin/.bitcoin", "-conf=/home/bitcoin/.bitcoin/bitcoin.conf", "-printtoconsole"]
+    volumes:
+      - bitcoin-mutinynet-data:/home/bitcoin/.bitcoin
+      - ./deploy/mutinynet-nodes/bitcoin.conf:/home/bitcoin/.bitcoin/bitcoin.conf:ro
+    ports:
+      - "38332:38332"
+      - "38333:38333"
+      - "28332:28332"
+      - "28333:28333"
+    networks:
+      - sats402-mutinynet
+
+  lnd-agent:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-agent
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-agent-data:/root/.lnd
+      - ./deploy/mutinynet-nodes/lnd-agent.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "9731:9735"
+      - "10001:10009"
+      - "8081:8080"
+    networks:
+      - sats402-mutinynet
+
+  lnd-gateway:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-gateway
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-gateway-data:/root/.lnd
+      - ./deploy/mutinynet-nodes/lnd-gateway.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "9732:9735"
+      - "10002:10009"
+      - "8082:8080"
+    networks:
+      - sats402-mutinynet
+
+  lnd-merchant:
+    image: lightninglabs/lnd:v0.21.0-beta.rc1
+    container_name: sats402-lnd-merchant
+    restart: unless-stopped
+    command: ["lnd", "--configfile=/root/.lnd/lnd.conf"]
+    depends_on:
+      - bitcoind
+    volumes:
+      - lnd-merchant-data:/root/.lnd
+      - ./deploy/mutinynet-nodes/lnd-merchant.conf:/root/.lnd/lnd.conf:ro
+    ports:
+      - "9733:9735"
+      - "10003:10009"
+      - "8083:8080"
+    networks:
+      - sats402-mutinynet
+
+networks:
+  sats402-mutinynet:
+    name: sats402-mutinynet
+
+volumes:
+  bitcoin-mutinynet-data:
+  lnd-agent-data:
+  lnd-gateway-data:
+  lnd-merchant-data:

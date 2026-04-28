@@ -1,0 +1,18 @@
+{
+  "name": "sats402-firecrawl",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "description": "Unofficial SATS-402 wrapper proof for Firecrawl paid delivery over Lightning.",
+  "scripts": {
+    "demo": "node src/demo.js",
+    "demo:fixture": "node src/demo.js --fixture",
+    "readme": "node src/demo.js --print-readme-proof",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "Maven (SATS-402)",
+  "license": "MIT"
+}

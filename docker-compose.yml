@@ -1,0 +1,12 @@
+services:
+  sats402-demo:
+    build: .
+    container_name: sats402-mutinynet-live-demo
+    ports:
+      - "4020:4020"
+    environment:
+      PORT: "4020"
+      SATS402_DEMO_MODE: "hybrid"
+      SATS402_LIGHTNING_BACKEND: "sim"
+      SATS402_BRIDGE_SAFETY_DELTA: "18"
+      SATS402_CURRENT_BLOCK_HEIGHT: "840000"
